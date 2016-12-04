@@ -1,5 +1,6 @@
 # Loading tm library
 library(tm)
+library(tm)
 # opening a corpus of the sampled docs
 text_dir = "/home/smeths/Documents/development/rProgramming/Coursera/Capstone Project/Week 1/sample_data/"
 docs <- Corpus(DirSource(text_dir))   
