@@ -1,0 +1,110 @@
+---
+title: "Capstone Project - Exploratory Analysis"
+author: "Smeths"
+date: "4 December 2016"
+output: html_document
+---
+<style type="text/css">
+.table {
+    width: 70%;
+    float: center;
+}
+.caption {
+    color: black;
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Project Aims
+
+This project aims to use text data collected from twitter, blogs and news sites to produce a predictive text model. So far I have downloaded and extracted the data; sampled and cleaned the data and performed exploratory analyse. I have written r scripts for each of these processes, which are available at my github account. https://github.com/Smeths/CapStoneProject
+
+## Downloading and Extracting the Data
+
+The following script downloads and extracts the data from "https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip" if the data is not already present in my the directory. The script also extracts the data and downloads a "bad words" list created by google, which will be used to filter out profanity during the cleaning process.
+
+```{r downloading}
+source("01_download_extract.R")
+knitr::kable(df_data_files,caption="Data Files")
+```
+
+## Cleaning and Sampling the Data
+
+The next script contains a function that produces random samples from each of the data files with a specified size and a specified random number. The samples are cleaned by removing profanity (using the file discussed above) and a data frame containing basic information, such as number of lines, for each data file is returned by the function.
+
+```{r clean_sample, message=FALSE, warnings = FALSE}
+source("02_clean_sample.R")
+options(warn=-1)
+df_data_info <- gen_sample(seed=150,nl=10)
+options(warn=0)
+knitr::kable(df_data_info,caption="Data File Info")
+```
+
+## Exploratory Analysis
+
+### Further Cleaning and "ngram" Frequency Analysis
+
+The sample files created previously have been loaded opened and a corpus created using the "tm" r package. The "tm" package is then used to further clean the data. Specifically:
+
+* Removing Punctuation
+* Removing Numbers
+* Converting to Lower Case
+* Removing Web Links
+
+Next a "Term Document Matrix" was created and the number of unique, unigrams, bigrams and trigrams are reported, along with sparsity of the term document matrix and other information. 
+
+```{r corpus_explore, fig.align='center'}
+stemming=FALSE
+source("03a_prop_function.R",print.eval=TRUE)
+source("03_corpus_exploratory.R",print.eval=TRUE)
+kable(df_freq_info, caption="Frequency Analysis")
+```
+
+The number of unique terms; sparsity and the percentage of ngrams required to cover 50% and 90% of the ngram corpus increases as we go from unigrams to bigrams etc, which seems intuative. Plotting the frequency distribution gives further insights
+
+```{r unigram, fig.align='center', echo=FALSE}
+barplot(head(unigram_ord_freq,30),las=2,main="Unigram Frequency")
+```
+
+```{r bigram, fig.align='center', echo=FALSE}
+barplot(head(bigram_ord_freq,30),las=2,main="Bigram Frequency")
+```
+
+```{r trigram, fig.align='center', echo=FALSE}
+par(mar=c(6.5,4.1,4.1,2.1))
+barplot(head(trigram_ord_freq,30),las=2,main="Trigram Frequency")
+```
+
+```{r quadgram, fig.align='center', echo=FALSE}
+par(mar=c(10.1,4.1,4.1,2.1))
+barplot(head(quadgram_ord_freq,30),las=2,main="Quadgram Frequency")
+```
+
+The most frequent terms are as you would expect. E.g. "the" for unigrams, "of the" for bigrams etc. It is also clear that the shape of the distribution changes for different ngrams. Specifically, a large proportion of the unigrams are clustered around the most frequent words, however the distributions become much more dispersed for the bigrams, trigrams and quadgrams. Additionally, the frequencies for the unigrams seems to follow "Zipfs law" https://en.wikipedia.org/wiki/Zipf's_law, which is reassuring, although the bar for "that" is clearly less than a third of the height of the bar for "the".
+
+### Words from Foreign Languages
+
+Using the american-english dictionary provided with Linux distributions the following script
+
+```{r nonenglish}
+source("03b_nonenglish.R")
+```
+Produces a list of non english terms (nonenglish.txt in my repo) used in the corpus. Most of them are slang terms, however the french word "voila" does appear. I'm not sure it is a good idea to try and remove all Non-English words as there are few of them and some, such as "voila", could well be used fairly frequently in conversational English.
+
+### Increasing Coverage
+
+Stemming is a possible way of increasing coverage, i.e. use few words to cover a greater percentage of the corpus. Stemming involves reducing words to there root so jumping/jumped/jumps could all be represented by jump. The r "tm" package allows use of Porter stemming (http://snowball.tartarus.org/algorithms/porter/stemmer.html). The output below is a rerun of the frequency analysis above with Porter stemming incorporated.
+
+```{r stemming, fig.align='center'}
+stemming=TRUE
+source("03a_prop_function.R",print.eval=TRUE)
+source("03_corpus_exploratory.R",print.eval=TRUE)
+kable(df_freq_info, caption="Frequency Analysis")
+```
+
+## Plans for APP/Model
+
+The next steps will be to produce some preliminary models. The bases of the these models will be the calculation of condition probabilities for the next word given the previous word(s), the words with the highest conditional probability will be used as predictions. The models will need to be tested for speed and accuracy in some way and then the "best" model will be choosen and used to produce an text prediction APP using shiny.

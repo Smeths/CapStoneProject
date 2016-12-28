@@ -1,3 +1,5 @@
+suppressMessages(library(knitr))
+
 # Creating directory for the data
 
 destfile <- "data"
@@ -29,12 +31,6 @@ if(!file.exists(destfile))
      unzip(data,exdir="data")
 }
 
-# Listing files in the data directory
-
-print("zip files downloaded:")
-print("")
-list.files("data",pattern="zip")
-
 # Extracting the data
 
 zipfile <- "data/Coursera-SwiftKey.zip"
@@ -50,11 +46,12 @@ if(!file.exists(txtfile))
      unzip(zipfile,exdir="data")
 }
 
-print("")
-print("extracted data file")
-print("")
-list.files("data/final/en_US")
-list.files("data",pattern = "txt")
+zip_files <- list.files("data",pattern="zip")
+data_files <- list.files("data/final/en_US")
+txt_files <- list.files("data",pattern = "txt")
+
+df_data_files <- data.frame(Blog.file=data_files[1],News.file=data_files[2],Twitter.file=data_files[3])
+colnames(df_data_files)<-c("Blog File","News File","Twitter File")
 
 
 

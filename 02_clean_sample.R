@@ -7,6 +7,12 @@ gen_sample <- function(seed=100,nl=1000){
      system("wc -l data/final/en_US/en_US.twitter.txt > data/lines.txt")
      system("wc -l data/final/en_US/en_US.news.txt >> data/lines.txt")
      system("wc -l data/final/en_US/en_US.blogs.txt >> data/lines.txt")
+     system("wc -w data/final/en_US/en_US.twitter.txt >> data/lines.txt")
+     system("wc -w data/final/en_US/en_US.news.txt >> data/lines.txt")
+     system("wc -w data/final/en_US/en_US.blogs.txt >> data/lines.txt")
+     system("wc -c data/final/en_US/en_US.twitter.txt >> data/lines.txt")
+     system("wc -c data/final/en_US/en_US.news.txt >> data/lines.txt")
+     system("wc -c data/final/en_US/en_US.blogs.txt >> data/lines.txt")
      
      # loading number of lines for each file
      
@@ -15,8 +21,14 @@ gen_sample <- function(seed=100,nl=1000){
      nl_twitter <- as.numeric(strsplit(nl_content," ")[[1]][1])
      nl_news <- as.numeric(strsplit(nl_content," ")[[2]][1])
      nl_blogs <- as.numeric(strsplit(nl_content," ")[[3]][1])
+     nw_twitter <- as.numeric(strsplit(nl_content," ")[[4]][1])
+     nw_news <- as.numeric(strsplit(nl_content," ")[[5]][1])
+     nw_blogs <- as.numeric(strsplit(nl_content," ")[[6]][1])
+     nb_twitter <- as.numeric(strsplit(nl_content," ")[[7]][1])
+     nb_news <- as.numeric(strsplit(nl_content," ")[[8]][1])
+     nb_blogs <- as.numeric(strsplit(nl_content," ")[[9]][1])
      close(nl_con)
-
+     
      #######################################################
      # Setting random seeds and sample index for each file #
      #######################################################
@@ -132,7 +144,14 @@ gen_sample <- function(seed=100,nl=1000){
      
      write.csv(twitter_df,twitter_fn)
      write.csv(news_df,news_fn)
-     write.csv(blogs_df,blogs_fn)     
+     write.csv(blogs_df,blogs_fn)
+     
+     df_data_files <- data.frame(Blog.file=c(nl_blogs,nw_blogs,nb_blogs),
+                                 News.file=c(nl_news,nw_news,nb_news),
+                                 Twitter.file=c(nl_blogs,nw_blogs,nb_blogs))
+     colnames(df_data_files)<-c("Blog File","News File","Twitter File")
+     rownames(df_data_files)<-c("Number of Lines","Number of Words","Number of Bytes")
+     return(df_data_files)
 }
      
 
