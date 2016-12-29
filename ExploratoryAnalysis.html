@@ -329,11 +329,12 @@ kable(df_freq_info, caption=&quot;Frequency Analysis&quot;)</code></pre>
 </tr>
 </tbody>
 </table>
+<p>As would be expected the number of unique unigrams drops considerable, as does the number of unigrams required to cover 90% of the unigram corpus. However, the effect of stemming on bigram and trigram frequencies is considerably less pronounced.</p>
 </div>
 </div>
 <div id="plans-for-appmodel" class="section level2">
 <h2>Plans for APP/Model</h2>
-<p>The next steps will be to produce some preliminary models. The bases of the these models will be the calculation of condition probabilities for the next word given the previous word(s), the words with the highest conditional probability will be used as predictions. The models will need to be tested for speed and accuracy in some way and then the “best” model will be choosen and used to produce an text prediction APP using shiny.</p>
+<p>The next steps will be to produce some preliminary models. The bases of the these models will be the calculation of conditional probabilities for the next word given the previous word(s), the words with the highest conditional probability will be used as predictions (some initial models can be seen in the files 04a_bigram_cp_model.R, 04b_trigram_cp_model.R, 04c_quadgram_cp_model.R, 04a_quingram_cp_model.R). The models will need to be tested for speed and accuracy in some way and then the “best” model will be choosen and used to produce an text prediction APP using shiny.</p>
 </div>
 
 
