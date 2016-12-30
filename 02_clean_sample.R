@@ -42,7 +42,7 @@ gen_sample <- function(seed=100,nl=1000){
      # Extracting twitter data           #
      #####################################
      
-     twitter_con <- file('data/final/en_US/en_US.twitter.txt', 'r')
+     twitter_con <- file('data/final/en_US/en_US.twitter_clean.txt', 'r')
      twitter_lines <- rep("",nl)
      twitter_line_num <- rep(0,nl)
      
@@ -65,7 +65,7 @@ gen_sample <- function(seed=100,nl=1000){
      # Extracting news data              #
      #####################################
      
-     news_con <- file('data/final/en_US/en_US.news.txt', 'r')
+     news_con <- file('data/final/en_US/en_US.news_clean.txt', 'r')
      news_lines <- rep("",nl)
      news_line_num <- rep(0,nl)
      
@@ -88,7 +88,7 @@ gen_sample <- function(seed=100,nl=1000){
      # Extracting blogs data             #
      #####################################
      
-     blogs_con <- file('data/final/en_US/en_US.blogs.txt', 'r')
+     blogs_con <- file('data/final/en_US/en_US.blogs_clean.txt', 'r')
      blogs_lines <- rep("",nl)
      blogs_line_num <- rep(0,nl)
      

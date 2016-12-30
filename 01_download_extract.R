@@ -31,12 +31,22 @@ if(!file.exists(destfile))
      unzip(data,exdir="data")
 }
 
-# Extracting the data
+# Extracting the data and removing null characters
 
 zipfile <- "data/Coursera-SwiftKey.zip"
 if(!file.exists("data/final"))
 {
      unzip("data/Coursera-SwiftKey.zip",exdir="data")
+# Removing null characters
+     file <- 'data/final/en_US/en_US.blogs.txt'
+     newfile <- 'data/final/en_US/en_US.blogs_clean.txt'
+     writeLines(iconv(readLines(file,skipNul = TRUE)),newfile)
+     file <- 'data/final/en_US/en_US.news.txt'
+     newfile <- 'data/final/en_US/en_US.news_clean.txt'
+     writeLines(iconv(readLines(file,skipNul = TRUE)),newfile)
+     file <- 'data/final/en_US/en_US.twitter.txt'
+     newfile <- 'data/final/en_US/en_US.twitter_clean.txt'
+     writeLines(iconv(readLines(file,skipNul = TRUE)),newfile)
 }
      
 txtfile <- "data/full-list-of-bad-words-banned-by-google-txt-file_2013_11_26_04_53_31_867.txt"
