@@ -2,9 +2,9 @@ suppressMessages(library(tm))
 suppressMessages(library(ggplot2))
 
 # opening data frames with text
-twitter_data <- read.csv("data/sample_data/twitter_l500_s150.csv")
-news_data <- read.csv("data/sample_data/news_l500_s150.csv")
-blogs_data <- read.csv("data/sample_data/blogs_l500_s150.csv")
+twitter_data <- read.csv("data/sample_data/twitter_l1000_s100.csv")
+news_data <- read.csv("data/sample_data/news_l1000_s100.csv")
+blogs_data <- read.csv("data/sample_data/blogs_l1000_s100.csv")
 
 # Creating a corpus for each data set using tm
 twitter_corp <- Corpus(VectorSource(twitter_data$twitter_lines))
@@ -23,11 +23,15 @@ corp <- tm_map(corp, PlainTextDocument)
 tdm_uni <- TermDocumentMatrix(corp)
 terms <- Terms(tdm_uni)
 
+# american-english file used below kept at the following area /usr/share/dict/american-english
+# on my linux operating system.
+
 aeng_con <- file('data/american-english', 'r')
 aeng_content <- readLines(aeng_con)
 aeng_content <- gsub("'s","",aeng_content)
+close(aeng_con)
 
 nonenlish <- terms[!(terms %in% aeng_content)]
-nonenglish_con <- file('nonenglish.txt', 'w')
+nonenglish_con <- file('data/nonenglish.txt', 'w')
 writeLines(nonenlish,con=nonenglish_con)
 close(nonenglish_con)

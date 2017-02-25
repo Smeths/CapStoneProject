@@ -37,16 +37,16 @@ zipfile <- "data/Coursera-SwiftKey.zip"
 if(!file.exists("data/final"))
 {
      unzip("data/Coursera-SwiftKey.zip",exdir="data")
-# Removing null characters
+# Removing null and non ascii characters
      file <- 'data/final/en_US/en_US.blogs.txt'
      newfile <- 'data/final/en_US/en_US.blogs_clean.txt'
-     writeLines(iconv(readLines(file,skipNul = TRUE)),newfile)
+     writeLines(iconv(readLines(file,skipNul = TRUE),from="UTF-8",to="ASCII",sub=""),newfile)
      file <- 'data/final/en_US/en_US.news.txt'
      newfile <- 'data/final/en_US/en_US.news_clean.txt'
-     writeLines(iconv(readLines(file,skipNul = TRUE)),newfile)
+     writeLines(iconv(readLines(file,skipNul = TRUE),from="UTF-8",to="ASCII",sub=""),newfile)
      file <- 'data/final/en_US/en_US.twitter.txt'
      newfile <- 'data/final/en_US/en_US.twitter_clean.txt'
-     writeLines(iconv(readLines(file,skipNul = TRUE)),newfile)
+     writeLines(iconv(readLines(file,skipNul = TRUE),from="UTF-8",to="ASCII",sub=""),newfile)
 }
      
 txtfile <- "data/full-list-of-bad-words-banned-by-google-txt-file_2013_11_26_04_53_31_867.txt"

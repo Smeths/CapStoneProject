@@ -35,28 +35,43 @@ gen_sample <- function(seed=100,nl=1000){
      
      # Number of lines to read
      set.seed(seed)
-     twitter_index <- sample(1:nl_twitter,nl,replace=FALSE)
-     news_index <- sample(1:nl_news,nl,replace=FALSE)
-     blogs_index <- sample(1:nl_blogs,nl,replace=FALSE)
-     #####################################
-     # Extracting twitter data           #
-     #####################################
+     twitter_index <- sample(1:nl_twitter,2*nl,replace=FALSE)
+     news_index <- sample(1:nl_news,2*nl,replace=FALSE)
+     blogs_index <- sample(1:nl_blogs,2*nl,replace=FALSE)
+     #########################################################
+     # Extracting twitter data for both training and testing #
+     #########################################################
      
      twitter_con <- file('data/final/en_US/en_US.twitter_clean.txt', 'r')
-     twitter_lines <- rep("",nl)
-     twitter_line_num <- rep(0,nl)
+     train_twitter_lines <- rep("",nl)
+     test_twitter_lines <- rep("",nl)
+     train_twitter_line_num <- rep(0,nl)
+     test_twitter_line_num <- rep(0,nl)
      
-     j=0
+     jtrain=0
+     jtest=0
+     train = TRUE
+     
      for (i in 1:nl_twitter) {
-          if (i %in% twitter_index){
-               j = j + 1
-               twitter_lines[j] <- readLines(twitter_con,n=1)
-               twitter_line_num[j] <- i
-          } 
-          else
-          {
-               temp <- readLines(twitter_con,n=1)
-          }
+       if (i %in% twitter_index){
+         if(train){
+           jtrain = jtrain + 1
+           train_twitter_lines[jtrain] <- readLines(twitter_con,n=1)
+           train_twitter_line_num[jtrain] <- i
+           train = FALSE
+         }
+         else 
+         {
+           jtest = jtest + 1
+           test_twitter_lines[jtest] <- readLines(twitter_con,n=1)
+           test_twitter_line_num[jtest] <- i
+           train = TRUE                   
+         }
+       } 
+       else
+       {
+         temp <- readLines(twitter_con,n=1)
+       }
      }
      
      close(twitter_con)
@@ -66,20 +81,35 @@ gen_sample <- function(seed=100,nl=1000){
      #####################################
      
      news_con <- file('data/final/en_US/en_US.news_clean.txt', 'r')
-     news_lines <- rep("",nl)
-     news_line_num <- rep(0,nl)
+     train_news_lines <- rep("",nl)
+     test_news_lines <- rep("",nl)
+     train_news_line_num <- rep(0,nl)
+     test_news_line_num <- rep(0,nl)
      
-     j=0
+     jtrain=0
+     jtest=0
+     train = TRUE
+     
      for (i in 1:nl_news) {
-          if (i %in% news_index){
-               j = j + 1
-               news_lines[j] <- readLines(news_con,n=1)
-               news_line_num[j] <- i
-          } 
-          else
-          {
-               temp <- readLines(news_con,n=1)
-          }
+       if (i %in% news_index){
+         if(train){
+           jtrain = jtrain + 1
+           train_news_lines[jtrain] <- readLines(news_con,n=1)
+           train_news_line_num[jtrain] <- i
+           train = FALSE
+         }
+         else
+         {
+           jtest = jtest + 1
+           test_news_lines[jtest] <- readLines(news_con,n=1)
+           test_news_line_num[jtest] <- i
+           train = TRUE                   
+         }
+       } 
+       else
+       {
+         temp <- readLines(news_con,n=1)
+       }
      }
      
      close(news_con)
@@ -89,20 +119,36 @@ gen_sample <- function(seed=100,nl=1000){
      #####################################
      
      blogs_con <- file('data/final/en_US/en_US.blogs_clean.txt', 'r')
-     blogs_lines <- rep("",nl)
-     blogs_line_num <- rep(0,nl)
+     train_blogs_lines <- rep("",nl)
+     test_blogs_lines <- rep("",nl)
+     train_blogs_line_num <- rep(0,nl)
+     test_blogs_line_num <- rep(0,nl)
+     
+     jtrain=0
+     jtest=0
+     train = TRUE
      
      j=0
      for (i in 1:nl_blogs) {
-          if (i %in% blogs_index){
-               j = j + 1
-               blogs_lines[j] <- readLines(blogs_con,n=1)
-               blogs_line_num[j] <- i
-          } 
-          else
-          {
-               temp <- readLines(blogs_con,n=1)
-          }
+       if (i %in% blogs_index){
+         if(train){
+           jtrain = jtrain + 1
+           train_blogs_lines[jtrain] <- readLines(blogs_con,n=1)
+           train_blogs_line_num[jtrain] <- i
+           train = FALSE
+         }
+         else
+         {
+           jtest = jtest + 1
+           test_blogs_lines[jtest] <- readLines(blogs_con,n=1)
+           test_blogs_line_num[jtest] <- i
+           train = TRUE                   
+         }
+       } 
+       else
+       {
+         temp <- readLines(blogs_con,n=1)
+       }
      }
      
      close(blogs_con)
@@ -125,26 +171,42 @@ gen_sample <- function(seed=100,nl=1000){
      # Removing all bad words
      
      for (word in badwords) {
-          twitter_lines <- gsub(word,"",twitter_lines,ignore.case=TRUE)
-          news_lines <- gsub(word,"",news_lines,ignore.case=TRUE)
-          blogs_lines <- gsub(word,"",blogs_lines,ignore.case=TRUE)
+          train_twitter_lines <- gsub(word,"",train_twitter_lines,ignore.case=TRUE)
+          train_news_lines <- gsub(word,"",train_news_lines,ignore.case=TRUE)
+          train_blogs_lines <- gsub(word,"",train_blogs_lines,ignore.case=TRUE)
+          test_twitter_lines <- gsub(word,"",test_twitter_lines,ignore.case=TRUE)
+          test_news_lines <- gsub(word,"",test_news_lines,ignore.case=TRUE)
+          test_blogs_lines <- gsub(word,"",test_blogs_lines,ignore.case=TRUE)
      }
      
      ####################################################
      # Creating data frames and writting data to a file #
      ####################################################
      
-     twitter_df <- data.frame(twitter_line_num,twitter_lines)
-     news_df <- data.frame(news_line_num,news_lines)
-     blogs_df <- data.frame(blogs_line_num,blogs_lines)
+     train_twitter_df <- data.frame(train_twitter_line_num,train_twitter_lines)
+     train_news_df <- data.frame(train_news_line_num,train_news_lines)
+     train_blogs_df <- data.frame(train_blogs_line_num,train_blogs_lines)
+     test_twitter_df <- data.frame(test_twitter_line_num,test_twitter_lines)
+     test_news_df <- data.frame(test_news_line_num,test_news_lines)
+     test_blogs_df <- data.frame(test_blogs_line_num,test_blogs_lines)
      
-     twitter_fn <- paste("data/sample_data/twitter_l",as.character(nl),"_s",as.character(seed),".csv",sep="")
-     news_fn <- paste("data/sample_data/news_l",as.character(nl),"_s",as.character(seed),".csv",sep="")
-     blogs_fn <- paste("data/sample_data/blogs_l",as.character(nl),"_s",as.character(seed),".csv",sep="")
+     if(!file.exists("data/sample_data")){
+        system("mkdir data/sample_data")
+     }
      
-     write.csv(twitter_df,twitter_fn)
-     write.csv(news_df,news_fn)
-     write.csv(blogs_df,blogs_fn)
+     train_twitter_fn <- paste("data/sample_data/train_twitter_l",as.character(nl),"_s",as.character(seed),".csv",sep="")
+     train_news_fn <- paste("data/sample_data/train_news_l",as.character(nl),"_s",as.character(seed),".csv",sep="")
+     train_blogs_fn <- paste("data/sample_data/train_blogs_l",as.character(nl),"_s",as.character(seed),".csv",sep="")
+     test_twitter_fn <- paste("data/sample_data/test_twitter_l",as.character(nl),"_s",as.character(seed),".csv",sep="")
+     test_news_fn <- paste("data/sample_data/test_news_l",as.character(nl),"_s",as.character(seed),".csv",sep="")
+     test_blogs_fn <- paste("data/sample_data/test_blogs_l",as.character(nl),"_s",as.character(seed),".csv",sep="")
+     
+     write.csv(train_twitter_df,train_twitter_fn)
+     write.csv(train_news_df,train_news_fn)
+     write.csv(train_blogs_df,train_blogs_fn)
+     write.csv(test_twitter_df,test_twitter_fn)
+     write.csv(test_news_df,test_news_fn)
+     write.csv(test_blogs_df,test_blogs_fn)
      
      df_data_files <- data.frame(Blog.file=c(nl_blogs,nw_blogs,nb_blogs),
                                  News.file=c(nl_news,nw_news,nb_news),

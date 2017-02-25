@@ -1,7 +1,7 @@
 # opening data frames with text
-twitter_data <- read.csv("data/sample_data/twitter_1000_100.csv")
-news_data <- read.csv("data/sample_data/news_1000_100.csv")
-blogs_data <- read.csv("data/sample_data/blogs_1000_100.csv")
+twitter_data <- read.csv("data/sample_data/twitter_l1000_s100.csv")
+news_data <- read.csv("data/sample_data/news_l1000_s100.csv")
+blogs_data <- read.csv("data/sample_data/blogs_l1000_s100.csv")
 
 # Creating a corpus for each data set using tm
 library(tm)
@@ -36,7 +36,7 @@ df <- merge(df,dfa, by.x="wordA", by.y="wordA")
 df$con_probs <- df$bigram_freq.x/df$bigram_freq.y
 df <- data.frame(df$wordA,df$wordB,df$con_probs)
 ord <- order(df$df.wordA,df$df.con_probs, decreasing = TRUE)
-df <- df_bi[ord,]
+df <- df[ord,]
 
 
 
