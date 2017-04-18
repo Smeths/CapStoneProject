@@ -4,11 +4,11 @@ shinyUI(fluidPage(
         titlePanel("Text Predictor"),
         sidebarPanel(
            h3("Input:"),
-           h3("Two Words (wordAB):"),
+           h3("Enter text:"),
            textInput(inputId = "wordAB", label="", value = "")),
         mainPanel(
           h3("Output:"),
-          h3("Prediction (wordC):"),
+          h3("Next word:"),
           verbatimTextOutput("wordC"),
           br(),
           h3("Model Used:"),

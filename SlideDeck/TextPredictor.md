@@ -1,67 +1,66 @@
 TextPredictor
 ========================================================
 My online content:
-
 - Source Code: https://github.com/Smeths/CapStoneProject
 - Exploratory Analysis: https://rpubs.com/Smeths/238057
 - Application: https://jaysmey.shinyapps.io/ShinyApp/
 
 Useful online resources:
-
 - https://www.youtube.com/user/afigfigueira/playlists?shelf_id=5&view=50&sort=dd
 - https://www.youtube.com/playlist?list=PL4LJlvG_SDpxQAwZYtwfXcQr7kGnl9W93
 
 What is TextPredictor?
 ========================================================
 
-TextPredictor is an text prediction application and language model.This presentation describes:
+TextPredictor is an text prediction application.This presentation describes:
 
 - How TextPredictor works
-- How TextPredictor performance is assessed
 - How the App works
+- Assessing Performance
 
 How TextPredictor Works
 ========================================================
 
-1. Data frames of trigrams, bigrams and unigrams with associated conditional probabilities have been formed from large corpi of twitter, blogs and news sources 
+1. Data frames of trigrams and bigrams with associated conditional probabilities have been formed from large corpi of twitter, blogs and news sources 
 2. Given two words the trigram data frame is searched for a match and the word with the largest probability is returned
 3. If there is no match in the trigram data frame, the first word is ignored and bigram dataframe is searched
-4. As the user enters words an associated probability is calculated using the "Katz backoff model"
 
 
 ```
-           wordAB wordC trigram_probs
-1      who issued   the             1
-2       were able    to             1
-3 victim reported   the             1
-4           to st louis             1
-5  to prosecutors   who             1
-6    to interview  ford             1
+           wordAB    wordC pCgivenAB
+67575      a back   injury 0.5000000
+67576 a bachelors   degree 1.0000000
+67577      a baby     bird 0.3333333
+67578      a baby     ctfu 0.3333333
+67579      a baby    youre 0.3333333
+67580         a a somewhat 1.0000000
 ```
 
-How TextPredictor Performance is Assessed
+How the App works
 ========================================================
 
-Perplexity has been used to assess performance of the model's I have developed
+The input section of the app is on the left hand side and output section is on the right. When text is entered into the input section following outputs are displayed:
 
-1. A training set and test set have been formed
-2. Trigram, bigram and unigram models have been built using the training data
-3. A random selection of senctences s1,s2,s3,....,sm are taken from the test set
-4. Perplexity is the evaluated according to the following:
+- A prediction of the next world
+- The type of model used to make the prediction
+- The associated probability
+- Any warnings (such as entering a word not in the apps corpus)
+- A section of the underlying dataframe showing alternative predictions
+
+Assessing Performance
+========================================================
+
+Perplexity has been used to assess the performance of the model
+
+1. Training set and test set have were formed
+2. Conditional probability models are calculated using the training set
+3. The perplexity is then calculated as below, using using the sentences s1,..,sm from the test data
 
 $Perplexity = 2^{-l}$
-$l = \frac{1}{M} \sum\limits_{i=1}^{m}\log(p(s_{i}))$  
 
-Where M is the number of words in the test set
+$l = \frac{1}{M} \sum\limits_{i=1}^{m}\log(p(s_{i}))$ (M = Number of words in training set)
 
-How to run TextPredictor
-========================================================
+A corpus of 5863 words gave a bigram perplexity of 130.2
 
-The input section of the app is on the left hand side and outputs are on the right. The following options are avaible:
 
-- Enter one word the second will be predicted and the probability of the first will be calculated
-- Enter two words and next will be predicted and the probability of the first two calculated
-- Enter three or more words and the next will be predicted and the probability of the last 3 calculated
-
-All probability calculations are based on "Katz backoff model"
 
